@@ -3,13 +3,29 @@ version: '3.1'
 volumes:
     prometheus_data: {}
     grafana_data: {}
+    db-data:
+      driver: local
 
 services:
+  sqlserver:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=petstore
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
   petstore:
-    image: rasika/petstore:unspecified
+    image: shashiradw/doc_pet_store
     ports:
       - 8080:8080
     restart: always
+    links:
+      - sqlserver
+
   grafana:
     image: grafana/grafana:7.0.3
     user: "472"
@@ -22,6 +38,7 @@ services:
       - ./grafana/provisioning/:/etc/grafana/provisioning/
       - ./src:/var/lib/grafana/dashboards
     restart: always
+
 
   prometheus:
     image: prom/prometheus:v2.1.0
@@ -36,3 +53,5 @@ services:
     ports:
       - 9090:9090
     restart: always
+    depends_on:
+      - sqlserver
