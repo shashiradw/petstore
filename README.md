@@ -28,7 +28,7 @@ If you want to learn more about Quarkus, please visit its website: https://quark
 
 ## Run test suite
 
-You can test your services in dev mode by running test cases inside the _**src/test**_ directory.
+You can test your services in dev mode by running test cases inside the _**src/test**_ directory or run ./gradlew test.
 
 ## Curl commands
 
